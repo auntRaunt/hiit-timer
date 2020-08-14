@@ -1,0 +1,14 @@
+    <!-- <% for(let i=1; i<totalItems.length ; i++){  %>
+    <%    setTimeout( ()=> { %>
+    <%      timeMoveArr = []; %>
+    <%      timeMoveArr.push(totalItems[i]); %>
+    <%      timeNmoveArr = []; %>
+    <%      timeNmoveArr.push(totalItems[i+1]); %>
+    <%      console.log("timeMoveArr") %>
+    <%      console.log(timeMoveArr) %>
+    <%      console.log("timeNmoveArr") %>
+    <%      console.log(timeNmoveArr) %>
+    <%    }, totalItems[i-1].time) %>
+    <% } %> -->
+
+    <!-- <% setInterval(()=>{ console.log(timeMoveArr); console.log(timeNmoveArr)}, 5000) %> -->

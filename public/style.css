@@ -1,0 +1,133 @@
+* {
+  font-size: 20px;
+}
+
+p{
+  margin: 0;
+  padding: 5px;
+}
+
+.wrapper {
+  width: 400px;
+  border: 1px solid black;
+  margin: 0 auto;
+  padding-left: 40px;
+  padding-top: 10px;
+  text-align: center;
+}
+
+#topic-sentence {
+  text-align: center;
+}
+
+input[type="number"] {
+  width: 3em;
+}
+
+.input-div {
+  padding-top: 10px;
+}
+
+label{
+  width: 60px;
+}
+
+/*For timer.ejs*/
+
+.timer-wrap {
+  width: 500px;
+  height: 300px;
+  border: 1px solid black;
+  margin: 30px auto;
+  /* display: grid; */
+  /* display: flexbox; */
+}
+
+.curr h1, .next h1{
+  font-size: 20px;
+  text-align: center;
+  font-weight: bold;
+}
+
+.item-display-l{
+  font-size: 30px;
+  height: 30px;
+}
+
+.item-display-s{
+  text-align: center;
+}
+
+.time-display-l{
+  font-size: 60px;
+  height: 60px;
+}
+
+.time-display-s{
+  text-align: center;
+}
+
+
+
+.curr-next-wrap {
+  width: 500px;
+  height: 175px;
+  /* background-color: yellow; */
+  display: flex;
+}
+
+.curr {
+  width: 50%;
+  background-color: yellow;
+}
+
+.curr p,
+.next p {
+  text-align: center;
+}
+
+.next {
+  width: 50%;
+  background-color: green;
+}
+
+.showing-parts {
+  width: 500px;
+  height: 85px;
+  background-color: orange;
+  display: flex;
+}
+
+#time-pass{
+  background-color: red;
+}
+#reset{
+  background-color: palegoldenrod;
+}
+#intervals{
+  background-color: palegreen;
+}
+#pause-start{
+  background-color: palevioletred;
+}
+#time-remain{
+  background-color: papayawhip;
+}
+
+#time-pass,
+#intervals,
+#time-remain {
+  flex-basis: 30%;
+  flex-grow: 0;
+}
+
+#reset, #pause-start{
+  flex-basis: 5%;
+  flex-grow: 0;
+}
+
+.curr-tasks {
+  width: 500px;
+  height: 75px;
+  /* background-color: blue; */
+}

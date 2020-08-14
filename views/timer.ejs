@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="/style.css">
+
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/css/bootstrap.min.css">
+
+</head>
+
+<body>
+    <% console.log("Variables have sented to ejs") %>
+    <% console.log("timeMoveArr") %>
+    <% console.log(timeMoveArr) %>
+    <% console.log("timeNmoveArr") %>
+    <% console.log(timeNmoveArr) %>
+
+
+    <div class="timer-wrap">
+        <div class="curr-next-wrap">
+            <div class="curr">
+                <h1>Current</h1>
+                <p class="item-display-l" id="curr-task">Task</p>
+                <p class="time-display-l" id="curr-time">00:00</p>
+            </div>
+            <div class="next">
+                <h1>Next</h1>
+                <p class="item-display-l" id='next-task'>Task</p>
+                <p class="time-display-l" id='next-time'>00:00</p>
+            </div>
+
+        </div>
+
+        <div class="showing-parts">
+            <div id="time-pass">
+                <p class="item-display-s">Time Passed</p>
+                <p class="time-display-s" id="time-pass-p">00:00</p>
+            </div>
+            <div id="reset">
+                <button type="button" class="btn btn-default btn-lg"
+                    style="border: none; height: 100%" id="reset-btn">
+                    <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div id="intervals">
+                <p class="item-display-s">Interval</p>
+                <p class="time-display-s" id="intervals-p">1 / <%= intervals %></p>
+            </div>
+            <div id="pause-start">
+                <button type="button" class="btn btn-default btn-lg"
+                    style="border: none; height: 100%" id="play-start-btn">
+                    <span class="glyphicon glyphicon-play" aria-hidden="true"></span>
+                </button>
+            </div>
+            <div id="time-remain">
+                <p class="item-display-s">Remaining</p>
+                <p class="time-display-s" id="time-remain-p"><%= totalTime %></p>
+            </div>
+        </div>
+        <div class="curr-tasks"></div>
+    </div>
+
+    <script src="/timer.js"></script>
+</body>
+
+</html>
