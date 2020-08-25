@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let number = 0;
+        let timer = null;
+
+        function run() {
+            timer = setInterval(() => {
+                number++;
+                console.log(number);
+            }, 1000)
+        }
+        function clear(timer){
+            clearInterval(timer);
+            timer = null;
+            console.log(`number when stopped = ${number}`)
+        }
+    </script>
+</body>
+
+</html>
