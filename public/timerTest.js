@@ -120,15 +120,13 @@ function playAllTimer() {
 function clear_interval(timer) {
   console.log(timer);
   clearInterval(timer);
-  timer = null;
-  return timer;
+  delete timer;
 }
 
 function clear_timeout(timer) {
   console.log(timer);
   clearTimeout(timer);
-  timer = null;
-  return timer;
+  delete timer;
 }
 
 //Execute
@@ -181,35 +179,46 @@ async function getData() {
     }, 1000);
   }
 
-  initTimer(data);
-  logicTimer(data);
-  remainCountDownTimer();
-  passAddTimer(timePassSecond);
-  currCountDownTimer(curr_timer, eachObjTime, 0);
+  // initTimer(data);
+  // logicTimer(data);
+  // remainCountDownTimer();
+  // passAddTimer(timePassSecond);
+  // currCountDownTimer(curr_timer, eachObjTime, 0);
+
+  function playAll(){
+    initTimer(data);
+    logicTimer(data);
+    remainCountDownTimer();
+    passAddTimer(timePassSecond);
+    currCountDownTimer(curr_timer, eachObjTime, 0);
+  }
+
+  playAll();
 
   playPauseButton.addEventListener("click", () => {
     // need to toggle click;
     console.log("Pause/Play are clicked?");
 
-    if (remain_timer !== null && logic_timer !== null && pass_timer !== null && curr_timer !== null) {
+    if (remain_timer !== undefined && logic_timer !== undefined && pass_timer !== undefined && curr_timer !== undefined) {
+      console.log("run the clear function");
       clear_timeout(remain_timer);
       clear_interval(logic_timer);
       clear_interval(pass_timer);
       clear_interval(curr_timer);
     } else {
-      initTimer(data);
-      logicTimer(data);
-      remainCountDownTimer();
-      passAddTimer(timePassSecond);
-      currCountDownTimer(curr_timer, eachObjTime, 0);
+      console.log("RUN THE PLAYALL FUNCTION")
+      playAll();
+      // initTimer(data);
+      // logicTimer(data);
+      // remainCountDownTimer();
+      // passAddTimer(timePassSecond);
+      // currCountDownTimer(curr_timer, eachObjTime, 0);
     }
   });
 
-  // resetButton.addEventListener("click", () => {
-  //   all_timers = [logic_timer, remain_timer, pass_timer, curr_timer];
-  //   resetAll(data, all_timers);
-  //   console.log(all_timers[1]);
-  // });
+  resetButton.addEventListener("click", () => {
+    playAll();
+  });
 }
 
 getData();
