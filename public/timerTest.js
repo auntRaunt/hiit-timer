@@ -4,22 +4,24 @@ let nextTask = document.getElementById("next-task");
 let nextTime = document.getElementById("next-time");
 
 //Select intervals DOM
-let intervalDisplay = document.getElementById("intervals-p").textContent;
-let intervalDisplaySplit = intervalDisplay.split("/");
-let intervalDisplayFixed = intervalDisplaySplit[2];
-let intervalDisplayAdd = parseFloat(intervalDisplaySplit[0]);
+let intervalDisplay = document.getElementById("intervals-p").textContent; //get "1/12";
+let intervalDisplaySplit = intervalDisplay.split("/"); //get ["1","/","12"];
+let intervalDisplayFixed = intervalDisplaySplit[2]; //get 12
+let intervalDisplayAdd = parseFloat(intervalDisplaySplit[0]); //get1
 
 //Select time pass DOM
 let timePassDisplay = document.getElementById("time-pass-p").textContent;
 
-//get "XX:XX" format
+//get "XX:XX" format, get totalTime "01:40" send from server(index.js)
 let timeRemainFormat = document.getElementById("time-remain-p").textContent;
+
 //get ["XX", "XX"]
-let timeRemainSplit = timeRemainFormat.split(":");
-let timeRemainMinute = parseFloat(timeRemainSplit[0]) * 60;
-let timeRemainSecond = parseFloat(timeRemainSplit[1]);
+let timeRemainSplit = timeRemainFormat.split(":"); //get ["01", ":", "40"]
+let timeRemainMinute = parseFloat(timeRemainSplit[0]) * 60; //get 60 second
+let timeRemainSecond = parseFloat(timeRemainSplit[1]); //get 40 second
 //get total seconds
-let timeRemainTotal = timeRemainMinute + timeRemainSecond;
+let timeRemainTotal = timeRemainMinute + timeRemainSecond; //get 100 second
+
 let totalTimeForPass = timeRemainTotal;
 
 //Select reset button DOM, select playpause button DOM
@@ -32,6 +34,8 @@ let remain_timer = null;
 let pass_timer = null;
 let curr_timer = null;
 
+let pause = false;
+
 function initTimer(data) {
   currTask.textContent = data[0].name;
   currTime.textContent = data[0].timeFormat;
@@ -40,6 +44,7 @@ function initTimer(data) {
 }
 
 function logicTimer(data) {
+  //Get the whole task arrays as data
   let timing = 0;
   // let logicTimer = timer;
 
@@ -69,19 +74,24 @@ function logicTimer(data) {
   }
 }
 
-function remainCountDownTimer() {
-  remain_timer = setInterval(() => {
-    timeRemainTotal--;
-    document.getElementById("time-remain-p").textContent = new Date(
-      timeRemainTotal * 1000
-    )
-      .toISOString()
-      .substr(14, 5);
-    console.log(timeRemainTotal);
-    if (timeRemainTotal === 0) {
-      clearInterval(remain_timer);
-    }
-  }, 1000);
+function remainCountDownTimer(play) {
+  let remain_timer = null;
+  if (play) {
+    remain_timer = setInterval(() => {
+      timeRemainTotal--;
+      document.getElementById("time-remain-p").textContent = new Date(
+        timeRemainTotal * 1000
+      )
+        .toISOString()
+        .substr(14, 5);
+      console.log(timeRemainTotal);
+      if (timeRemainTotal === 0) {
+        clearInterval(remain_timer);
+      }
+    }, 1000);
+  } else {
+    clearInterval(remain_timer);
+  }
 }
 
 function addInterval() {
@@ -91,20 +101,23 @@ function addInterval() {
   // console.log(intervalDisplayAdd);
 }
 
-function passAddTimer(second) {
-  let passSecond = second;
-  pass_timer = setInterval(() => {
-    passSecond++;
-    document.getElementById("time-pass-p").textContent = new Date(
-      passSecond * 1000
-    )
-      .toISOString()
-      .substr(14, 5);
-    // console.log(timePassSecond);
-    if (passSecond === totalTimeForPass) {
-      clearInterval(pass_timer);
-    }
-  }, 1000);
+function passAddTimer(play) {
+  let passSecond = 0;
+  let pass_timer = null;
+  if (play) {
+    pass_timer = setInterval(() => {
+      passSecond++;
+      document.getElementById("time-pass-p").textContent = new Date(
+        passSecond * 1000
+      )
+        .toISOString()
+        .substr(14, 5);
+      // console.log(timePassSecond);
+      if (passSecond === totalTimeForPass) {
+        clearInterval(pass_timer);
+      }
+    }, 1000);
+  }
 }
 
 function playAllTimer() {
@@ -117,80 +130,70 @@ function playAllTimer() {
 
 //Use the response data from server
 
-function clear_interval(timer) {
-  console.log(timer);
-  clearInterval(timer);
-  delete timer;
-}
-
-function clear_timeout(timer) {
-  console.log(timer);
-  clearTimeout(timer);
-  delete timer;
-}
-
 //Execute
-async function getData() {
+async function getData(callback) {
   //Get response from GET route on server
   const response = await fetch("/result");
   const data = await response.json();
+  // console.log(data);
+
+  callback(data);
+}
+
+getData(function (data) {
   console.log(data);
 
-  //Initiate variables
-  let timePassSecond = 0;
   let i = 0;
-  let eachObjTime = data[i].time;
+  let eachObjTime = data[i].time; //Each time of the task in each obj
 
   //Think of using recursion inside the curr-time to count down
-  function currCountDownTimer(timer, eachObjTime, i) {
-    curr_timer = setInterval(() => {
-      eachObjTime--;
+  function currCountDownTimer(timer, eachObjTime, i, pause) {
+    if (!pause) {
+      curr_timer = setInterval(() => {
+        eachObjTime--;
 
-      //if count down time become 0, clear curr_timer, increase i, count down time becomes data[i].time
-      if (eachObjTime === 0) {
-        clearInterval(curr_timer);
+        //if count down time become 0, clear curr_timer, increase i, count down time becomes data[i].time
+        if (eachObjTime === 0) {
+          clearInterval(curr_timer);
 
-        console.log("eachObjTime = 0");
-        console.log(`i = ${i}`);
+          console.log("eachObjTime = 0");
+          console.log(`i = ${i}`);
 
-        if (i !== data.length) {
-          console.log("i = end");
-          i++;
+          if (i !== data.length) {
+            console.log("i = end");
+            i++;
+          }
+
+          //Save the time value of new object into a new variable
+          let newEachObjTime = data[i].time;
+
+          //精華所在
+          currCountDownTimer(curr_timer, newEachObjTime, i, false);
         }
 
-        //Save the time value of new object into a new variable
-        let newEachObjTime = data[i].time;
+        console.log(`inside the setInterval`);
+        console.log(`${eachObjTime}`);
 
-        //精華所在
-        currCountDownTimer(curr_timer, newEachObjTime, i);
-      }
-
-      console.log(`inside the setInterval`);
-      console.log(`${eachObjTime}`);
-
-      //Do not display 0 in text content of curr-time
-      if (eachObjTime !== 0) {
-        document.getElementById("curr-time").textContent = new Date(
-          eachObjTime * 1000
-        )
-          .toISOString()
-          .substr(14, 5);
-      }
-    }, 1000);
+        //Do not display 0 in text content of curr-time
+        if (eachObjTime !== 0) {
+          document.getElementById("curr-time").textContent = new Date(
+            eachObjTime * 1000
+          )
+            .toISOString()
+            .substr(14, 5);
+        }
+      }, 1000);
+    } else {
+      clearInterval(curr_timer);
+    }
   }
 
-  // initTimer(data);
-  // logicTimer(data);
-  // remainCountDownTimer();
-  // passAddTimer(timePassSecond);
-  // currCountDownTimer(curr_timer, eachObjTime, 0);
-
-  function playAll(){
+  function playAll() {
     initTimer(data);
     logicTimer(data);
-    remainCountDownTimer();
-    passAddTimer(timePassSecond);
-    currCountDownTimer(curr_timer, eachObjTime, 0);
+    remainCountDownTimer(true);
+    passAddTimer();
+    currCountDownTimer(curr_timer, eachObjTime, 0, false);
   }
 
   playAll();
@@ -198,27 +201,21 @@ async function getData() {
   playPauseButton.addEventListener("click", () => {
     // need to toggle click;
     console.log("Pause/Play are clicked?");
-
-    if (remain_timer !== undefined && logic_timer !== undefined && pass_timer !== undefined && curr_timer !== undefined) {
-      console.log("run the clear function");
-      clear_timeout(remain_timer);
-      clear_interval(logic_timer);
-      clear_interval(pass_timer);
-      clear_interval(curr_timer);
+    pause = !pause;
+    if (pause) {
+      logicTimer(data, false);
+      remainCountDownTimer(false);
+      passAddTimer(false);
+      currCountDownTimer(false);
     } else {
-      console.log("RUN THE PLAYALL FUNCTION")
-      playAll();
-      // initTimer(data);
-      // logicTimer(data);
-      // remainCountDownTimer();
-      // passAddTimer(timePassSecond);
-      // currCountDownTimer(curr_timer, eachObjTime, 0);
+      logicTimer(data, true);
+      remainCountDownTimer(true);
+      passAddTimer(true);
+      currCountDownTimer(true);
     }
   });
 
   resetButton.addEventListener("click", () => {
     playAll();
   });
-}
-
-getData();
+});

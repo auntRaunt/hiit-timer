@@ -106,9 +106,10 @@ app.post("/timer", urlencodedParser, (req, res) => {
       }));
 
   //Calculate the total Time
+  
   const totalTime =
-    warmupTime + sets * (highintervalTime + lowintervalTime) + cooldownTime;
-  const totalTimeFormat = new Date(totalTime * 1000)
+    warmupTime + sets * (highintervalTime + lowintervalTime) + cooldownTime; // return 100 second
+  const totalTimeFormat = new Date(totalTime * 1000)      //return 01:40
     .toISOString()
     .substr(14, 5);
   console.log(totalTime);
