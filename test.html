@@ -23,27 +23,47 @@
     </div>
     <input type="button" value="Pause/Play" id="btn">
     <script>
-        let number = 0;
-        let timer = null;
+        // let number = 0;
+        // let timer = null;
 
-        function run() {
-            timer = setInterval(() => {
-                number++;
-                console.log(number);
-            }, 1000)
-        }
-        function clear(timer) {
-            clearInterval(timer);
-            timer = null;
-            console.log(`number when stopped = ${number}`)
-        }
+        // function run() {
+        //     timer = setInterval(() => {
+        //         number++;
+        //         console.log(number);
+        //     }, 1000)
+        // }
+
+        let timer = null;
         let data = [
             { name: "Warm up", timeFormat: "00:05", time: 5 },
-            { name: "High interval", timeFormat: "00:10", time: 10 },
+            { name: "High interval", timeFormat: "00:10", time: 8 },
             { name: "Low Interval", timeFormat: "00:05", time: 5 },
-            { name: "High interval", timeFormat: "00:10", time: 10 }
+            { name: "High interval", timeFormat: "00:10", time: 8 }
         ]
-        
+        let totalTime = data.reduce((acc, curr) => {
+            return acc + curr.time;
+        }, 0)
+        console.log(totalTime);
+        // let totalTime = 0;
+        // function run(data) {
+        //     for (let i = 0; i < data.length; i++) {
+        //         let eachTime = data[i].time;
+        //         totalTime += eachTime;
+        //         timer = setTimeout(() => {
+        //             console.log(data[i].name)
+        //         }, totalTime * 1000)
+        //     }
+        // }
+        // function clear() {
+        //     clearTimeout(timer);
+        //     console.log(timer);
+        //     // timer = null;
+        //     // console.log(`number when stopped = ${number}`)
+        // }
+
+
+
+
 
 
     </script>
