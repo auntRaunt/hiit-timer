@@ -21,6 +21,7 @@ let timeRemainMinute = parseFloat(timeRemainSplit[0]) * 60; //get 60 second
 let timeRemainSecond = parseFloat(timeRemainSplit[1]); //get 40 second
 //get total seconds
 let timeRemainTotal = timeRemainMinute + timeRemainSecond; //get 100 second
+let useTimeRemainTotal = timeRemainTotal;
 
 let totalTimeForPass = timeRemainTotal;
 
@@ -51,55 +52,17 @@ function initTimer(data) {
   nextTime.textContent = data[1].timeFormat;
 }
 
-//old code of logicTimer(data)
-// function logicTimer(data, pause) {
-//   //Get the whole task arrays as data
-//   let timing = 0;
-//   // let logicTimer = timer;
-
-//   for (let i = 0; i < data.length; i++) {
-//     const currDisplayName =
-//       i + 1 === data.length
-//         ? "You have finished all the tasks!"
-//         : data[i + 1].name;
-//     const currDisplayTime = i + 1 === data.length ? "" : data[i + 1].timeFormat;
-//     const nextDisplayName = i + 2 >= data.length ? "" : data[i + 2].name;
-//     const nextDisplayTime = i + 2 >= data.length ? "" : data[i + 2].timeFormat;
-//     const eachTime = data[i].time;
-//     // let currMoveTime = data[i].time;
-//     //Make the display second of curr timer count down
-//     timing += eachTime;
-
-//     logic_timer = setTimeout(() => {
-//       console.log("logic_timer runs");
-//       console.log(currDisplayName);
-//       addInterval();
-
-//       currTask.textContent = currDisplayName;
-//       currTime.textContent = currDisplayTime;
-//       nextTask.textContent = nextDisplayName;
-//       nextTime.textContent = nextDisplayTime;
-//       // currCountDownTimer(timing);
-//     }, timing * 1000);
-//   }
-//   //as logic_timer is still inside for loop, how to pause the timer inside the for loop
-//   if (pause) {
-//     console.log("pause the logic timer?");
-//     clearTimeout(logic_timer);
-//   }
-// }
-
 function remainCountDownTimer() {
   remain_timer = setInterval(() => {
-    timeRemainTotal--;
+    useTimeRemainTotal--;
     document.getElementById("time-remain-p").textContent = new Date(
-      timeRemainTotal * 1000
+      useTimeRemainTotal * 1000
     )
       .toISOString()
       .substr(14, 5);
     console.log("A. remain_timer runs");
-    console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
-    if (timeRemainTotal === 0) {
+    console.log(`A. useTimeRemainTotal = ${useTimeRemainTotal}`);
+    if (useTimeRemainTotal === 0) {
       clearInterval(remain_timer);
     }
   }, 1000);
@@ -150,21 +113,24 @@ getData(function (data) {
   let eachTaskObjTime = data[i].time; //Each time of the task in each obj
   let j = 0;
   let eachCurrObjTime = data[j].time;
-  let newTaskTime = 0;
-  let newCurrTime = 0;
-
+  let newTaskTime = 0; //use as the return variable for logic timer to resume after pause
+  let newCurrTime = 0; //use as the return variable for currcountdown timer to resume after pause
   let currTime = 0;
+
+  initTimer(data);
 
   // //new code, how to pause the logicTimer
   function logicTimer(data, eachObjTime) {
     //Get the whole task arrays as data
     newTaskTime = eachObjTime;
     // console.log(`index i in first execution of logic Timer = ${i}`);
-    //seems useless below?
-    currTask.textContent = i === data.length ? "" : data[i].name;
-    currTime.textContent = i === data.length ? "" : data[i].timeFormat;
-    nextTask.textContent = i + 1 === data.length ? "" : data[i + 1].name;
-    nextTime.textContent = i + 1 === data.length ? "" : data[i + 1].timeFormat;
+
+    //new code, see if use?
+    currTask.textContent = data[i].name;
+    currTime.textContent = data[i].timeFormat;
+    nextTask.textContent = i+1 >= data.length? "" : data[i + 1].name;
+    nextTime.textContent = i+1 >= data.length? "" : data[i + 1].timeFormat;
+
     logic_timer = setInterval(() => {
       //if the time reaches the total time of each obj, then execute other obj
       currTime++;
@@ -230,19 +196,14 @@ getData(function (data) {
     }, 1000);
   }
 
-  // initTimer(data);
-  // logicTimer(data, eachTaskObjTime);
-  // currCountDownTimer(data, eachCurrObjTime);
-  // remainCountDownTimer();
-  // passAddTimer();
-
   playPauseButton.addEventListener("click", () => {
-    // need to toggle click;
-
+    //timer will trigger by the click after page reload
     if (i !== data.length) {
       play = !play;
       if (play) {
         if (firstPlay) {
+          playIcon.style.display = "none";
+          pauseIcon.style.display = "block";
           initTimer(data);
           logicTimer(data, eachTaskObjTime);
           currCountDownTimer(data, eachCurrObjTime);
@@ -280,53 +241,41 @@ getData(function (data) {
         firstPlay = false;
       }
     }
-
-    ////old code
-    // if (i !== data.length) {
-    //   pause = !pause;
-    //   if (pause) {
-    //     playIcon.style.display = "block";
-    //     pauseIcon.style.display = "none";
-    //     console.log("__________");
-    //     console.log("PAUSE ALL TIMER!!!!");
-    //     clear(pass_timer);
-    //     clear(remain_timer);
-    //     clear(logic_timer); //still can not clear? can not clear the logic timer inside the for loop
-    //     clear(curr_timer);
-    //     console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
-    //     console.log(`B. passSecond = ${passSecond}`);
-    //     console.log(`C. newTaskTime = ${newTaskTime}`);
-    //     console.log(`D. newCurrTime = ${newCurrTime}`);
-    //     console.log(`E. currTime = ${currTime}`);
-    //   } else {
-    //     playIcon.style.display = "none";
-    //     pauseIcon.style.display = "block";
-    //     console.log("___________");
-    //     console.log("RESUME ALL TIMER^_^");
-    //     passAddTimer(); //pass_timer will start at 0 when resume (solved) ->need to put the pass second in global scope
-    //     remainCountDownTimer();
-    //     logicTimer(data, newTaskTime);
-    //     currCountDownTimer(data, newCurrTime);
-    //     console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
-    //     console.log(`B. passSecond = ${passSecond}`);
-    //     console.log(`C. newTaskTime = ${newTaskTime}`);
-    //     console.log(`D. newCurrTime = ${newCurrTime}`);
-    //     console.log(`E. currTime = ${currTime}`);
-    //   }
-    // }
   });
 
   resetButton.addEventListener("click", () => {
-    // clear(pass_timer);
-    // clear(remain_timer);
-    // clear(logic_timer);
-    // clear(curr_timer);
-    // pass_timer = null;
-    // remain_timer = null;
-    // logic_timer = null;
-    // curr_timer = null;
-    // i = 0;
-    // j = 0;
+    clear(pass_timer);
+    clear(remain_timer);
+    clear(logic_timer);
+    clear(curr_timer);
+    pass_timer = null;
+    remain_timer = null;
+    logic_timer = null;
+    curr_timer = null;
+    initTimer(data);
+    i = 0;
+    j = 0;
+    newTaskTime = 0;
+    newCurrTime = 0;
+    useTimeRemainTotal = timeRemainTotal; // reset to originail total time
+    document.getElementById("time-remain-p").textContent = new Date(
+      useTimeRemainTotal * 1000
+    )
+      .toISOString()
+      .substr(14, 5);
+    passSecond = 0;
+    document.getElementById("time-pass-p").textContent = new Date(
+      passSecond * 1000
+    )
+      .toISOString()
+      .substr(14, 5);
+    intervalDisplayAdd = 1;
+    document.getElementById("intervals-p").textContent =
+      intervalDisplayAdd + " /" + intervalDisplaySplit[1];
+    firstPlay = true;
+    play = false;
+    playIcon.style.display = "block";
+    pauseIcon.style.display = "none";
   });
 });
 
