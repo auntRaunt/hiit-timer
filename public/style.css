@@ -131,3 +131,11 @@ label{
   height: 75px;
   /* background-color: blue; */
 }
+
+#play-icon{
+  display: block;
+}
+
+#pause-icon{
+  display: none;
+}
