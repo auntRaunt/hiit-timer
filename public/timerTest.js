@@ -91,8 +91,8 @@ function remainCountDownTimer() {
     )
       .toISOString()
       .substr(14, 5);
-    console.log(timeRemainTotal);
-    console.log("remain_timer runs");
+    console.log("A. remain_timer runs");
+    console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
     if (timeRemainTotal === 0) {
       clearInterval(remain_timer);
     }
@@ -103,6 +103,9 @@ function addInterval() {
   if (intervalDisplayAdd < intervalDisplaySplit[1]) intervalDisplayAdd++;
   document.getElementById("intervals-p").textContent =
     intervalDisplayAdd + " /" + intervalDisplaySplit[1];
+  console.log(
+    "ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL"
+  );
   // console.log(intervalDisplayAdd);
 }
 
@@ -114,19 +117,13 @@ function passAddTimer() {
     )
       .toISOString()
       .substr(14, 5);
-    console.log("pass_timer runs");
+    console.log("B. pass_timer runs");
+
+    console.log(`B. passSecond = ${passSecond}`);
     if (passSecond === totalTimeForPass) {
       clearInterval(pass_timer);
     }
   }, 1000);
-}
-
-function playAllTimer() {
-  initTimer(data);
-  logicTimer(data);
-  remainCountDownTimer();
-  passAddTimer(timePassSecond);
-  currCountDownTimer(curr_timer, eachObjTime, 0);
 }
 
 //Use the response data from server
@@ -137,71 +134,89 @@ async function getData(callback) {
   const response = await fetch("/result");
   const data = await response.json();
   // console.log(data);
-
   callback(data);
 }
 
 getData(function (data) {
   console.log(data);
 
-  // let i = 0;
-  // let eachObjTime = data[i].time; //Each time of the task in each obj
+  let i = 0;
+  let eachTaskObjTime = data[i].time; //Each time of the task in each obj
+  let j = 0;
+  let eachCurrObjTime = data[j].time;
+  let newTaskTime = 0;
+  let newCurrTime = 0;
+
+  let currTime = 0;
 
   // //new code, how to pause the logicTimer
-  function logicTimer(data, eachObjTime, i) {
+  function logicTimer(data, eachObjTime) {
     //Get the whole task arrays as data
-
-    let currTime = 0;
-    currTask.textContent =
-      i === data.length ? "You have finished all tasks" : data[i].name;
+    newTaskTime = eachObjTime;
+    // console.log(`index i in first execution of logic Timer = ${i}`);
+    //seems useless below?
+    currTask.textContent = i === data.length ? "" : data[i].name;
     currTime.textContent = i === data.length ? "" : data[i].timeFormat;
     nextTask.textContent = i + 1 === data.length ? "" : data[i + 1].name;
     nextTime.textContent = i + 1 === data.length ? "" : data[i + 1].timeFormat;
     logic_timer = setInterval(() => {
       //if the time reaches the total time of each obj, then execute other obj
       currTime++;
-      console.log(`currTime = ${currTime}`);
-      if (currTime === eachObjTime) {
+      console.log(`C. logic_timer runs`);
+      console.log(`C1. currTime = ${currTime}`);
+      console.log(`C2. newTaskTime = ${newTaskTime}`);
+      if (currTime === newTaskTime) {
         clearInterval(logic_timer);
         addInterval();
-        let index = i + 1;
-        let newEachObjTime = data[index].time;
-        logicTimer(data, newEachObjTime, index);
+        //very important for pausing
+        currTime = 0;
+        if (i !== data.length) {
+          i++;
+          let newEachObjTime = data[i].time;
+          logicTimer(data, newEachObjTime);
+        }
       }
     }, 1000);
   }
 
   //Think of using recursion inside the curr-time to count down
   //currCountDownTimer can be put in global scope?
-  function currCountDownTimer(data, eachObjTime, i) {
-    let eachTime = eachObjTime;
+  function currCountDownTimer(data, eachObjTime) {
+    // console.log(`index j in first execution of CURRCOUNTDOWN Timer = ${j}`);
+    newCurrTime = eachObjTime;
+    document.getElementById("curr-time").textContent = new Date(
+      newCurrTime * 1000
+    )
+      .toISOString()
+      .substr(14, 5);
     curr_timer = setInterval(() => {
-      eachTime--;
-      //if count down time become 0, clear curr_timer, increase i, count down time becomes data[i].time
-      if (eachTime === 0) {
+      newCurrTime--;
+      console.log(`D. currCountDownTimer runs`);
+      console.log(`D. newCurrTime = ${newCurrTime}`);
+      console.log(`_____________________________`);
+      //if count down time become 0, clear curr_t imer, increase i, count down time becomes data[i].time
+      if (newCurrTime === 0) {
         clearInterval(curr_timer);
-
-        console.log("eachTime = 0");
-        console.log(`i= ${i}`);
-
-        let index = i + 1;
-
-        if (index === data.length) {
-          return;
+        if (j === data.length - 1) {
+          document.getElementById("curr-time").textContent = new Date(
+            newCurrTime * 1000
+          )
+            .toISOString()
+            .substr(14, 5);
+          currTask.textContent = "You have finished all the tasks";
+          currTime.textContent = "";
         }
-        //Save the time value of new object into a new variable
-        let newEachObjTime = data[index].time;
-        //精華所在
-        currCountDownTimer(data, newEachObjTime, index);
+        if (j !== data.length) {
+          j++;
+          let newEachObjTime = data[j].time;
+          currCountDownTimer(data, newEachObjTime);
+        }
       }
 
-      console.log(`inside the setInterval`);
-      console.log(`${eachTime}`);
-
       //Do not display 0 in text content of curr-time
-      if (eachTime !== 0) {
+      if (newCurrTime !== 0) {
         document.getElementById("curr-time").textContent = new Date(
-          eachTime * 1000
+          newCurrTime * 1000
         )
           .toISOString()
           .substr(14, 5);
@@ -210,40 +225,60 @@ getData(function (data) {
   }
 
   initTimer(data);
-  logicTimer(data, data[0].time, 0);
+  logicTimer(data, eachTaskObjTime, false);
+  currCountDownTimer(data, eachCurrObjTime, false);
   remainCountDownTimer();
   passAddTimer();
-  currCountDownTimer(data, data[0].time, 0);
 
   playPauseButton.addEventListener("click", () => {
     // need to toggle click;
-    console.log("Pause/Play are clicked?");
     pause = !pause;
-    if (pause) {
-      console.log("__________");
-      console.log("PAUSE ALL TIMER!!!!");
-      clear(pass_timer);
-      clear(remain_timer);
-      // clear(logic_timer); //still can not clear? can not clear the logic timer inside the for loop
-      logicTimer(data, true);
-      clear(curr_timer);
-    } else {
-      console.log("___________");
-      console.log("RESUME ALL TIMER^_^");
-      passAddTimer(); //pass_timer will start at 0 when resume (solved) ->need to put the pass second in global scope
-      remainCountDownTimer();
-      logicTimer(data, false);
-      currCountDownTimer(data, eachObjTime);
+    if (i !== data.length) {
+      if (pause) {
+        console.log("__________");
+        console.log("PAUSE ALL TIMER!!!!");
+        clear(pass_timer);
+        clear(remain_timer);
+        clear(logic_timer); //still can not clear? can not clear the logic timer inside the for loop
+        clear(curr_timer);
+        console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
+        console.log(`B. passSecond = ${passSecond}`);
+        console.log(`C. newTaskTime = ${newTaskTime}`);
+        console.log(`D. newCurrTime = ${newCurrTime}`);
+        console.log(`E. currTime = ${currTime}`);
+      } else {
+        console.log("___________");
+        console.log("RESUME ALL TIMER^_^");
+        //is ok
+        passAddTimer(); //pass_timer will start at 0 when resume (solved) ->need to put the pass second in global scope
+        remainCountDownTimer();
+        //not ok
+        logicTimer(data, newTaskTime);
+        currCountDownTimer(data, newCurrTime);
+        console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
+        console.log(`B. passSecond = ${passSecond}`);
+        console.log(`C. newTaskTime = ${newTaskTime}`);
+        console.log(`D. newCurrTime = ${newCurrTime}`);
+        console.log(`E. currTime = ${currTime}`);
+      }
     }
   });
 
   resetButton.addEventListener("click", () => {
-    playAll();
+    // clear(pass_timer);
+    // clear(remain_timer);
+    // clear(logic_timer);
+    // clear(curr_timer);
+    // pass_timer = null;
+    // remain_timer = null;
+    // logic_timer = null;
+    // curr_timer = null;
+    // i = 0;
+    // j = 0;
   });
 });
 
 function clear(timer) {
   console.log(`${timer} is cleared`);
   clearInterval(timer);
-  clearTimeout(timer);
 }
