@@ -45,6 +45,10 @@ let play = false;
 let firstPlay = true;
 let counter = 0;
 
+let audio = new Audio('sorafune.mp3');
+audio.volumne = 0.2;
+
+
 function initTimer(data) {
   currTask.textContent = data[0].name;
   currTime.textContent = data[0].timeFormat;
@@ -202,6 +206,7 @@ getData(function (data) {
       play = !play;
       if (play) {
         if (firstPlay) {
+          audio.play();
           playIcon.style.display = "none";
           pauseIcon.style.display = "block";
           initTimer(data);
