@@ -43,10 +43,11 @@ let passSecond = 0;
 let play = false;
 
 let firstPlay = true;
+let isEnd = false;
 let counter = 0;
 
 let audio = new Audio('sorafune.mp3');
-audio.volumne = 0.2;
+audio.volume = 0.5;
 
 
 function initTimer(data) {
@@ -146,7 +147,7 @@ getData(function (data) {
         addInterval();
         //very important for pausing
         currTime = 0;
-        if (i !== data.length) {
+        if (i !== data.length-1) {
           i++;
           let newEachObjTime = data[i].time;
           logicTimer(data, newEachObjTime);
@@ -182,18 +183,21 @@ getData(function (data) {
 
       //if count down time become 0, clear curr_t imer, increase i, count down time becomes data[i].time
       if (newCurrTime === 0) {
+        
         clearInterval(curr_timer);
         if (j === data.length - 1) {
+          isEnd = true;
           playIcon.style.display = "block";
           pauseIcon.style.display = "none";
-          currTime.textContent = "";
+          document.getElementById("curr-time").textContent = "";
           currTask.textContent = "You have finished all the tasks";
-          console.log("Execute this?");
+          console.log(`j = ${j}`);
         }
 
-        if (j !== data.length) {
+        if (j !== data.length-1) {
+          console.log(`Execute when the end?`)
           j++;
-          let newEachObjTime = data[j].time;
+          let newEachObjTime =  data[j].time;
           currCountDownTimer(data, newEachObjTime);
         }
       }
@@ -202,11 +206,12 @@ getData(function (data) {
 
   playPauseButton.addEventListener("click", () => {
     //timer will trigger by the click after page reload
-    if (i !== data.length) {
+    //after i === data.length-1, can not access this button
+    if (i <= data.length-1 && isEnd === false) {
       play = !play;
       if (play) {
         if (firstPlay) {
-          audio.play();
+          // audio.play();
           playIcon.style.display = "none";
           pauseIcon.style.display = "block";
           initTimer(data);
@@ -279,6 +284,7 @@ getData(function (data) {
       intervalDisplayAdd + " /" + intervalDisplaySplit[1];
     firstPlay = true;
     play = false;
+    isEnd = false;
     playIcon.style.display = "block";
     pauseIcon.style.display = "none";
   });
