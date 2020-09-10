@@ -1,6 +1,10 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+const PORT = process.env.PORT || 4444;
+app.listen(PORT, () => {
+    console.log(`Our app is running on port ${ PORT }`);
+});
 
 app.set("view engine", "ejs");
 
@@ -140,8 +144,4 @@ app.get("/", (req, res) => {
 
 app.get("/api", (req, res) => {
   res.send("The server has received your GET request");
-});
-
-app.listen(4444, () => {
-  console.log("Listening at port 4444");
 });
