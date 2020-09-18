@@ -105,7 +105,13 @@ function passAddTimer() {
 //Execute
 async function getData(callback) {
   //Get response from GET route on server
+  ////old code
+  // const response = await fetch("/result");
+
+  //new code
   const response = await fetch("/result");
+
+
   const data = await response.json();
   // console.log(data);
   callback(data);

@@ -3,7 +3,7 @@ const app = express();
 const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 4444;
 app.listen(PORT, () => {
-    console.log(`Our app is running on port ${ PORT }`);
+  console.log(`Our app is running on port ${PORT}`);
 });
 
 app.set("view engine", "ejs");
@@ -14,20 +14,18 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(express.static("public"));
 app.use(express.json({ limit: "1mb" }));
 
-const logicArr = [];
-let timeMoveArr = [];
-let timeNmoveArr = [];
+let logicArr = [];
 
 app.get("/result", (req, res) => {
   res.send(logicArr);
+  logicArr = [];
 });
 
 app.post("/timer", urlencodedParser, (req, res) => {
   console.log("Server has got a POST request");
   // res.send("The server has received your POST request")
-  console.log(req.body);
 
-  let intervals = 0;
+  console.log(req.body);
 
   const sets = isNaN(parseFloat(req.body["sets-i"]))
     ? 0
@@ -110,29 +108,26 @@ app.post("/timer", urlencodedParser, (req, res) => {
       }));
 
   //Calculate the total Time
-  
+
   const totalTime =
     warmupTime + sets * (highintervalTime + lowintervalTime) + cooldownTime; // return 100 second
-  const totalTimeFormat = new Date(totalTime * 1000)      //return 01:40
+  const totalTimeFormat = new Date(totalTime * 1000) //return 01:40
     .toISOString()
     .substr(14, 5);
   console.log(totalTime);
 
-
-  //Put logicArr[0] into timeMoveArr
-  timeMoveArr.push(logicArr[0]);
-
-  //Put logicArr[1] into timeNmoveArr
-  timeNmoveArr.push(logicArr[1]);
-  
   res.render("timer", {
     totalTime: totalTimeFormat,
     intervals: logicArr.length,
     totalItems: logicArr,
-    timeMoveArr: timeMoveArr,
-    timeNmoveArr: timeNmoveArr,
   });
+
+  res.send(logicArr);
+
   console.log("console.log in Server side");
+
+  //new code to solve the endless stacking of array
+  app.set("data", logicArr);
 
   console.log(logicArr);
   // res.send(data);
