@@ -17,15 +17,23 @@ app.use(express.json({ limit: "1mb" }));
 let logicArr = [];
 
 app.get("/result", (req, res) => {
-  res.send(logicArr);
+  //can base on user's session id to give the logicArr to the client?
+  let data = require("./public/data");
+  console.log('hi?')
+  console.log(data);
+  // console.log(data.formData);
+  // res.send(data.formData);
+  res.send(data);
+
+
+  // res.send(logicArr);
   logicArr = [];
 });
 
 app.post("/timer", urlencodedParser, (req, res) => {
   console.log("Server has got a POST request");
-  // res.send("The server has received your POST request")
 
-  console.log(req.body);
+  // console.log(req.body);
 
   const sets = isNaN(parseFloat(req.body["sets-i"]))
     ? 0
@@ -114,7 +122,7 @@ app.post("/timer", urlencodedParser, (req, res) => {
   const totalTimeFormat = new Date(totalTime * 1000) //return 01:40
     .toISOString()
     .substr(14, 5);
-  console.log(totalTime);
+  // console.log(totalTime);
 
   res.render("timer", {
     totalTime: totalTimeFormat,
@@ -122,7 +130,7 @@ app.post("/timer", urlencodedParser, (req, res) => {
     totalItems: logicArr,
   });
 
-  res.send(logicArr);
+  // res.send(logicArr);
 
   console.log("console.log in Server side");
 

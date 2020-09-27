@@ -13,8 +13,8 @@
 
 <body>
     <% console.log("Variables have sented to ejs") %>
-    
-
+    <% console.log(totalItems) %>
+    <% let data = 404 %>
     <div class="timer-wrap">
         <div class="curr-next-wrap">
             <div class="curr">
@@ -36,8 +36,7 @@
                 <p class="time-display-s" id="time-pass-p">00:00</p>
             </div>
             <div id="reset">
-                <button type="button" class="btn btn-default btn-lg"
-                    style="border: none; height: 100%" id="reset-btn">
+                <button type="button" class="btn btn-default btn-lg" style="border: none; height: 100%" id="reset-btn">
                     <span class="glyphicon glyphicon-repeat" aria-hidden="true"></span>
                 </button>
             </div>
@@ -46,8 +45,8 @@
                 <p class="time-display-s" id="intervals-p">1 / <%= intervals %></p>
             </div>
             <div id="pause-start">
-                <button type="button" class="btn btn-default btn-lg"
-                    style="border: none; height: 100%" id="play-start-btn">
+                <button type="button" class="btn btn-default btn-lg" style="border: none; height: 100%"
+                    id="play-start-btn">
                     <span id="play-icon" class="glyphicon glyphicon-play" aria-hidden="true"></span>
                     <span id="pause-icon" class="glyphicon glyphicon-pause" aria-hidden="true"></span>
                 </button>
@@ -59,6 +58,9 @@
         </div>
         <div class="curr-tasks"></div>
     </div>
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="/data.js"></script>
     <script src="/timerTest.js"></script>
 </body>
 
