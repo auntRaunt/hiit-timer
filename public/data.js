@@ -17,7 +17,7 @@ let logicArr = [
   { name: "Low Interval", timeFormat: "00:04", time: "4" },
   { name: "Cool Down", timeFormat: "00:05", time: "5" },
 ];
-let result = JSON.parse(localStorage.getItem("data"));
+let result = JSON.parse(sessionStorage.getItem("data"));
 // var logicArr = [];
 let testObj = "abc";
 
@@ -30,7 +30,7 @@ $("#myForm").on("submit", (e) => {
   // console.log(formData);
   logicArr = createLogic(formData);
   // console.log(logicArr);
-  localStorage.setItem("data", JSON.stringify(logicArr));
+  sessionStorage.setItem("data", JSON.stringify(logicArr));
 });
 // |-index.js
 //   |--public

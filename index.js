@@ -15,8 +15,6 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(express.static("public"));
 app.use(express.json({ limit: "1mb" }));
 
-let logicArr = [];
-
 app.get("/result", (req, res) => {
   //can base on user's session id to give the logicArr to the client?
   //new code
@@ -25,13 +23,14 @@ app.get("/result", (req, res) => {
   // // let jsonData = JSON.stringify(data);
   // console.log(data);
   // res.send(data);
-
   //old code
   // res.send(logicArr);
   // logicArr = [];
 });
 
 app.post("/timer", urlencodedParser, (req, res) => {
+  let logicArr = [];
+
   console.log("Server has got a POST request");
 
   // console.log(req.body);
@@ -134,9 +133,6 @@ app.post("/timer", urlencodedParser, (req, res) => {
   // res.send(logicArr);
 
   console.log("console.log in Server side");
-
-  //new code to solve the endless stacking of array
-  app.set("data", logicArr);
 
   console.log(logicArr);
   // res.send(data);

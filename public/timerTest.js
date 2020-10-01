@@ -117,7 +117,7 @@ async function getData(callback) {
   // // const data = await response.json();
   // // // console.log(data);
   // callback(data);
-  let storedData = JSON.parse(localStorage.getItem('data'));
+  let storedData = JSON.parse(sessionStorage.getItem('data'));
   let copy = storedData;
   // console.log(storedData);
   // console.log(result);
