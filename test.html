@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <form id="myForm" method="POST" action="" class="needs-validation" novalidate>
+        <div class="form-group row">
+            <label for="sets-i" class="col-sm-2 col-form-label">No.of sets</label>
+            <div class="col-sm-10 input-div">
+                <input type="number" name="sets-i" id="sets-i" min="1" max="10" value="3">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="warmup-i" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10 input-div">
+                <input type="text" name="warmup-i" id="warmup-i" placeholder="Warm Up" size="10" value="Warm up">
+            </div>
+            <label for="warmup-r" class="col-sm-2 col-form-label">Required</label>
+            <div class="col-sm-10 input-div">
+                <input type="radio" name="warmup-r" id="warmup-r">
+            </div>
+            <label for="warmup-t" class="col-sm-2 col-form-label">Duration</label>
+            <div class="col-sm-10 input-div">
+                <input type="number" name="warmup-t" id="warmup-t" size="10" value="3">`
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="cooldown-i" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10 input-div">
+                <input type="text" name="cooldown-i" id="cooldown-i" placeholder="Cool Down" size="10"
+                    value="Cool Down">
+            </div>
+            <label for="cooldown-r" class="col-sm-2 col-form-label">Required</label>
+            <div class="col-sm-10 input-div">
+                <input type="radio" name="cooldown-r" id="cooldown-r">
+            </div>
+            <label for="cooldown-t" class="col-sm-2 col-form-label">Duration</label>
+            <div class="col-sm-10 input-div">
+                <input type="number" name="cooldown-t" id="cooldown-t" size="1" maxlength="3" value="3">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="highint-i" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10 input-div">
+                <input type="text" name="highint-i" id="highint-i" placeholder="High Interval" size="10"
+                    value="High interval">
+            </div>
+            <label for="highint-r" class="col-sm-2 col-form-label">Required</label>
+            <div class="col-sm-10 input-div">
+                <input type="radio" name="highint-r" id="highint-r">
+            </div>
+            <label for="highint-t" class="col-sm-2 col-form-label">Duration</label>
+            <div class="col-sm-10 input-div">
+                <input type="number" name="highint-t" id="highint-t" size="10" value="3">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="lowint-i" class="col-sm-2 col-form-label">Name</label>
+            <div class="col-sm-10 input-div">
+                <input type="text" name="lowint-i" id="lowint-i" placeholder="Short Interval" size="10"
+                    value="Low Interval">
+            </div>
+            <label for="lowint-r" class="col-sm-2 col-form-label">Required</label>
+            <div class="col-sm-10 input-div">
+                <input type="radio" name="lowint-r" id="lowint-r">
+            </div>
+            <label for="lowint-t" class="col-sm-2 col-form-label">Duration</label>
+            <div class="col-sm-10 input-div">
+                <input type="number" name="lowint-t" id="lowint-t" size="10" value="3">
+            </div>
+        </div>
+        <button type="submit">Submit</button>
+    </form>
+</body>
+<script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc="
+    crossorigin="anonymous"></script>
+<script>
+    let formData;
+    let logicArr = [];
+
+    //need to make the form data same as logicArr!!
+    /*
+        logicArr = [
+          { name: 'Warm up', timeFormat: '00:05', time: 5 },
+          { name: 'High interval', timeFormat: '00:05', time: 5 },
+          { name: 'Low Interval', timeFormat: '00:05', time: 5 },
+          { name: 'High interval', timeFormat: '00:05', time: 5 },
+          { name: 'Low Interval', timeFormat: '00:05', time: 5 },
+          { name: 'Cool Down', timeFormat: '00:05', time: 5 }
+        ]
+        */
+    $(document).on("submit", "#myForm", (e) => {
+        e.preventDefault();
+
+        formData = $("form").serializeArray();
+
+        console.log("formData is below");
+        console.log(formData);
+        logicArr = createLogic(formData);
+    });
+
+    function createLogic(data) {
+        let logic = [];
+        let setsNum = parseFloat(
+            data.filter((item) => {
+                return item.name === "sets-i";
+            })[0].value
+        );
+
+        //see if warmup, cooldown, highInt, lowInt have
+        let warmupRequired = data.filter((item) => {
+            return item.name === "warmup-r";
+        });
+
+        let cooldownRequired = data.filter((item) => {
+            return item.name === "cooldown-r";
+        });
+
+        let highintRequired = data.filter((item) => {
+            return item.name === "highint-r";
+        });
+
+        let lowintRequired = data.filter((item) => {
+            return item.name === "lowint-r";
+        });
+
+        //Get the name and time
+        let warmupName = data.filter((item) => {
+            return item.name === "warmup-i";
+        })[0].value;
+
+        let warmupTime = data.filter((item) => {
+            return item.name === "warmup-t";
+        })[0].value;
+        // console.log(warmupTime);
+
+        let cooldownName = data.filter((item) => {
+            return item.name === "cooldown-i";
+        })[0].value;
+        // console.log(cooldownName);
+
+        let cooldownTime = data.filter((item) => {
+            return item.name === "cooldown-t";
+        })[0].value;
+
+        let highintName = data.filter((item) => {
+            return item.name === "highint-i";
+        })[0].value;
+
+        let highintTime = data.filter((item) => {
+            return item.name === "highint-t";
+        })[0].value;
+
+        let lowintName = data.filter((item) => {
+            return item.name === "lowint-i";
+        })[0].value;
+
+        let lowintTime = data.filter((item) => {
+            return item.name === "lowint-t";
+        })[0].value;
+
+        let warmupTimeFormat = new Date(warmupTime * 1000)
+            .toISOString()
+            .substr(14, 5);
+        let cooldownTimeFormat = new Date(cooldownTime * 1000)
+            .toISOString()
+            .substr(14, 5);
+        let highintTimeFormat = new Date(highintTime * 1000)
+            .toISOString()
+            .substr(14, 5);
+        let lowintTimeFormat = new Date(lowintTime * 1000)
+            .toISOString()
+            .substr(14, 5);
+
+        //if no required, but fill the name and time, will not work
+        if (warmupRequired.length !== 0) {
+            //if required, but no fill name and time
+            if (warmupTime !== "" && warmupName !== "") {
+                logic.push({
+                    name: warmupName,
+                    timeFormat: warmupTimeFormat,
+                    time: warmupTime,
+                });
+            }
+        }
+        if (highintRequired.length !== 0 || lowintRequired.length !== 0) {
+            console.log(setsNum);
+            for (let i = 0; i < setsNum; i++) {
+                if (
+                    (highintName === "" || highintTime === "") &&
+                    lowintName !== "" &&
+                    lowintTime !== ""
+                ) {
+                    console.log("highint is empty, lowint is not");
+                    logic.push({
+                        name: lowintName,
+                        timeFormat: lowintTimeFormat,
+                        time: lowintTime,
+                    });
+                } else if (
+                    (lowintName === "" || lowintTime === "") &&
+                    highintName !== "" &&
+                    highintTime !== ""
+                ) {
+                    console.log("lowint is empty, highint is not");
+                    logic.push({
+                        name: highintName,
+                        timeFormat: highintTimeFormat,
+                        time: highintTime,
+                    });
+                } else if (
+                    lowintName !== "" &&
+                    lowintTime !== "" &&
+                    highintName !== "" &&
+                    highintTime !== ""
+                ) {
+                    logic.push({
+                        name: highintName,
+                        timeFormat: highintTimeFormat,
+                        time: highintTime,
+                    });
+                    logic.push({
+                        name: lowintName,
+                        timeFormat: lowintTimeFormat,
+                        time: lowintTime,
+                    });
+                }
+            }
+        }
+        if (cooldownRequired.length !== 0) {
+            //if required, but no fill name and time
+            if (cooldownTime !== "" && cooldownName !== "") {
+                logic.push({
+                    name: cooldownName,
+                    timeFormat: cooldownTimeFormat,
+                    time: cooldownTime,
+                });
+            }
+        }
+        return logic;
+    }
+</script>
+
+</html>

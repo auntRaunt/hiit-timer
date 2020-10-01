@@ -1,3 +1,4 @@
+//Get logicArr from data.js?
 let currTask = document.getElementById("curr-task");
 let currTime = document.getElementById("curr-time");
 let nextTask = document.getElementById("next-task");
@@ -46,9 +47,8 @@ let firstPlay = true;
 let isEnd = false;
 let counter = 0;
 
-let audio = new Audio('sorafune.mp3');
+let audio = new Audio("sorafune.mp3");
 audio.volume = 0.5;
-
 
 function initTimer(data) {
   currTask.textContent = data[0].name;
@@ -106,196 +106,201 @@ function passAddTimer() {
 async function getData(callback) {
   //Get response from GET route on server
   ////old code
+
   // const response = await fetch("/result");
 
-  //new code
-  const response = await fetch("/result");
-
-  //Now think of how to get the data same as the data from post route.
-  const data = await response.text();
-
+  // //Now think of how to get the data same as the data from post route.
+  // //new code
   // const data = await response.json();
-  // // console.log(data);
-  callback(data);
+
+  // //old code
+  // // const data = await response.json();
+  // // // console.log(data);
+  // callback(data);
+  let storedData = JSON.parse(localStorage.getItem('data'));
+  let copy = storedData;
+  // console.log(storedData);
+  // console.log(result);
+  callback(copy);
 }
 
 getData(function (data) {
   console.log(data);
 
-  // let i = 0;
-  // let eachTaskObjTime = data[i].time; //Each time of the task in each obj
-  // let j = 0;
-  // let eachCurrObjTime = data[j].time;
-  // let newTaskTime = 0; //use as the return variable for logic timer to resume after pause
-  // let newCurrTime = 0; //use as the return variable for currcountdown timer to resume after pause
-  // let currTime = 0;
+  /**Original code, dont delete**/
+  let i = 0;
+  let eachTaskObjTime = parseFloat(data[i].time); //Each time of the task in each obj
+  let j = 0;
+  let eachCurrObjTime = parseFloat(data[j].time);
+  let newTaskTime = 0; //use as the return variable for logic timer to resume after pause
+  let newCurrTime = 0; //use as the return variable for currcountdown timer to resume after pause
+  let currTime = 0;
 
-  // initTimer(data);
+  initTimer(data);
 
-  // // //new code, how to pause the logicTimer
-  // function logicTimer(data, eachObjTime) {
-  //   //Get the whole task arrays as data
-  //   newTaskTime = eachObjTime;
-  //   // console.log(`index i in first execution of logic Timer = ${i}`);
+  // //new code, how to pause the logicTimer
+  function logicTimer(data, eachObjTime) {
+    //Get the whole task arrays as data
+    newTaskTime = eachObjTime;
+    // console.log(`index i in first execution of logic Timer = ${i}`);
 
-  //   //new code, see if use?
-  //   currTask.textContent = data[i].name;
-  //   currTime.textContent = data[i].timeFormat;
-  //   nextTask.textContent = i+1 >= data.length? "" : data[i + 1].name;
-  //   nextTime.textContent = i+1 >= data.length? "" : data[i + 1].timeFormat;
+    //new code, see if use?
+    currTask.textContent = data[i].name;
+    currTime.textContent = data[i].timeFormat;
+    nextTask.textContent = i + 1 >= data.length ? "" : data[i + 1].name;
+    nextTime.textContent = i + 1 >= data.length ? "" : data[i + 1].timeFormat;
 
-  //   logic_timer = setInterval(() => {
-  //     //if the time reaches the total time of each obj, then execute other obj
-  //     currTime++;
-  //     console.log(`C. logic_timer runs`);
-  //     console.log(`C1. currTime = ${currTime}`);
-  //     console.log(`C2. newTaskTime = ${newTaskTime}`);
-  //     if (currTime === newTaskTime) {
-  //       clearInterval(logic_timer);
-  //       addInterval();
-  //       //very important for pausing
-  //       currTime = 0;
-  //       if (i !== data.length-1) {
-  //         i++;
-  //         let newEachObjTime = data[i].time;
-  //         logicTimer(data, newEachObjTime);
-  //       }
-  //     }
-  //   }, 1000);
-  // }
+    logic_timer = setInterval(() => {
+      //if the time reaches the total time of each obj, then execute other obj
+      currTime++;
+      console.log(`C. logic_timer runs`);
+      console.log(`C1. currTime = ${currTime}`);
+      console.log(`C2. newTaskTime = ${newTaskTime}`);
+      if (currTime === newTaskTime) {
+        clearInterval(logic_timer);
+        addInterval();
+        //very important for pausing
+        currTime = 0;
+        if (i !== data.length - 1) {
+          i++;
+          let newEachObjTime = parseFloat(data[i].time);
+          logicTimer(data, newEachObjTime);
+        }
+      }
+    }, 1000);
+  }
 
-  // //Think of using recursion inside the curr-time to count down
-  // //currCountDownTimer can be put in global scope?
-  // function currCountDownTimer(data, eachObjTime) {
-  //   // console.log(`index j in first execution of CURRCOUNTDOWN Timer = ${j}`);
-  //   newCurrTime = eachObjTime;
-  //   document.getElementById("curr-time").textContent = new Date(
-  //     newCurrTime * 1000
-  //   )
-  //     .toISOString()
-  //     .substr(14, 5);
-  //   curr_timer = setInterval(() => {
-  //     newCurrTime--;
-  //     console.log(`D. currCountDownTimer runs`);
-  //     console.log(`D. newCurrTime = ${newCurrTime}`);
-  //     console.log(`_____________________________`);
+  //Think of using recursion inside the curr-time to count down
+  //currCountDownTimer can be put in global scope?
+  function currCountDownTimer(data, eachObjTime) {
+    // console.log(`index j in first execution of CURRCOUNTDOWN Timer = ${j}`);
+    newCurrTime = eachObjTime;
+    document.getElementById("curr-time").textContent = new Date(
+      newCurrTime * 1000
+    )
+      .toISOString()
+      .substr(14, 5);
+    curr_timer = setInterval(() => {
+      newCurrTime--;
+      console.log(`D. currCountDownTimer runs`);
+      console.log(`D. newCurrTime = ${newCurrTime}`);
+      console.log(`_____________________________`);
 
-  //     //Do not display 0 in text content of curr-time
-  //     if (newCurrTime !== 0) {
-  //       document.getElementById("curr-time").textContent = new Date(
-  //         newCurrTime * 1000
-  //       )
-  //         .toISOString()
-  //         .substr(14, 5);
-  //     }
+      //Do not display 0 in text content of curr-time
+      if (newCurrTime !== 0) {
+        document.getElementById("curr-time").textContent = new Date(
+          newCurrTime * 1000
+        )
+          .toISOString()
+          .substr(14, 5);
+      }
 
-  //     //if count down time become 0, clear curr_t imer, increase i, count down time becomes data[i].time
-  //     if (newCurrTime === 0) {
-        
-  //       clearInterval(curr_timer);
-  //       if (j === data.length - 1) {
-  //         isEnd = true;
-  //         playIcon.style.display = "block";
-  //         pauseIcon.style.display = "none";
-  //         document.getElementById("curr-time").textContent = "";
-  //         currTask.textContent = "You have finished all the tasks";
-  //         console.log(`j = ${j}`);
-  //       }
+      //if count down time become 0, clear curr_t imer, increase i, count down time becomes data[i].time
+      if (newCurrTime === 0) {
+        clearInterval(curr_timer);
+        if (j === data.length - 1) {
+          isEnd = true;
+          playIcon.style.display = "block";
+          pauseIcon.style.display = "none";
+          document.getElementById("curr-time").textContent = "";
+          currTask.textContent = "You have finished all the tasks";
+          console.log(`j = ${j}`);
+        }
 
-  //       if (j !== data.length-1) {
-  //         console.log(`Execute when the end?`)
-  //         j++;
-  //         let newEachObjTime =  data[j].time;
-  //         currCountDownTimer(data, newEachObjTime);
-  //       }
-  //     }
-  //   }, 1000);
-  // }
+        if (j !== data.length - 1) {
+          console.log(`Execute when the end?`);
+          j++;
+          let newEachObjTime = parseFloat(data[j].time);
+          currCountDownTimer(data, newEachObjTime);
+        }
+      }
+    }, 1000);
+  }
 
-  // playPauseButton.addEventListener("click", () => {
-  //   //timer will trigger by the click after page reload
-  //   //after i === data.length-1, can not access this button
-  //   if (i <= data.length-1 && isEnd === false) {
-  //     play = !play;
-  //     if (play) {
-  //       if (firstPlay) {
-  //         // audio.play();
-  //         playIcon.style.display = "none";
-  //         pauseIcon.style.display = "block";
-  //         initTimer(data);
-  //         logicTimer(data, eachTaskObjTime);
-  //         currCountDownTimer(data, eachCurrObjTime);
-  //         remainCountDownTimer();
-  //         passAddTimer();
-  //       } else {
-  //         playIcon.style.display = "none";
-  //         pauseIcon.style.display = "block";
-  //         console.log("___________");
-  //         console.log("RESUME ALL TIMER^_^");
-  //         passAddTimer(); //pass_timer will start at 0 when resume (solved) ->need to put the pass second in global scope
-  //         remainCountDownTimer();
-  //         logicTimer(data, newTaskTime);
-  //         currCountDownTimer(data, newCurrTime);
-  //         console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
-  //         console.log(`B. passSecond = ${passSecond}`);
-  //         console.log(`C. newTaskTime = ${newTaskTime}`);
-  //         console.log(`D. newCurrTime = ${newCurrTime}`);
-  //         console.log(`E. currTime = ${currTime}`);
-  //       }
-  //     } else {
-  //       playIcon.style.display = "block";
-  //       pauseIcon.style.display = "none";
-  //       console.log("__________");
-  //       console.log("PAUSE ALL TIMER!!!!");
-  //       clear(pass_timer);
-  //       clear(remain_timer);
-  //       clear(logic_timer); //still can not clear? can not clear the logic timer inside the for loop
-  //       clear(curr_timer);
-  //       console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
-  //       console.log(`B. passSecond = ${passSecond}`);
-  //       console.log(`C. newTaskTime = ${newTaskTime}`);
-  //       console.log(`D. newCurrTime = ${newCurrTime}`);
-  //       console.log(`E. currTime = ${currTime}`);
-  //       firstPlay = false;
-  //     }
-  //   }
-  // });
+  playPauseButton.addEventListener("click", () => {
+    //timer will trigger by the click after page reload
+    //after i === data.length-1, can not access this button
+    if (i <= data.length - 1 && isEnd === false) {
+      play = !play;
+      if (play) {
+        if (firstPlay) {
+          // audio.play();
+          playIcon.style.display = "none";
+          pauseIcon.style.display = "block";
+          initTimer(data);
+          logicTimer(data, eachTaskObjTime);
+          currCountDownTimer(data, eachCurrObjTime);
+          remainCountDownTimer();
+          passAddTimer();
+        } else {
+          playIcon.style.display = "none";
+          pauseIcon.style.display = "block";
+          console.log("___________");
+          console.log("RESUME ALL TIMER^_^");
+          passAddTimer(); //pass_timer will start at 0 when resume (solved) ->need to put the pass second in global scope
+          remainCountDownTimer();
+          logicTimer(data, newTaskTime);
+          currCountDownTimer(data, newCurrTime);
+          console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
+          console.log(`B. passSecond = ${passSecond}`);
+          console.log(`C. newTaskTime = ${newTaskTime}`);
+          console.log(`D. newCurrTime = ${newCurrTime}`);
+          console.log(`E. currTime = ${currTime}`);
+        }
+      } else {
+        playIcon.style.display = "block";
+        pauseIcon.style.display = "none";
+        console.log("__________");
+        console.log("PAUSE ALL TIMER!!!!");
+        clear(pass_timer);
+        clear(remain_timer);
+        clear(logic_timer); //still can not clear? can not clear the logic timer inside the for loop
+        clear(curr_timer);
+        console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
+        console.log(`B. passSecond = ${passSecond}`);
+        console.log(`C. newTaskTime = ${newTaskTime}`);
+        console.log(`D. newCurrTime = ${newCurrTime}`);
+        console.log(`E. currTime = ${currTime}`);
+        firstPlay = false;
+      }
+    }
+  });
 
-  // resetButton.addEventListener("click", () => {
-  //   clear(pass_timer);
-  //   clear(remain_timer);
-  //   clear(logic_timer);
-  //   clear(curr_timer);
-  //   pass_timer = null;
-  //   remain_timer = null;
-  //   logic_timer = null;
-  //   curr_timer = null;
-  //   initTimer(data);
-  //   i = 0;
-  //   j = 0;
-  //   newTaskTime = 0;
-  //   newCurrTime = 0;
-  //   useTimeRemainTotal = timeRemainTotal; // reset to originail total time
-  //   document.getElementById("time-remain-p").textContent = new Date(
-  //     useTimeRemainTotal * 1000
-  //   )
-  //     .toISOString()
-  //     .substr(14, 5);
-  //   passSecond = 0;
-  //   document.getElementById("time-pass-p").textContent = new Date(
-  //     passSecond * 1000
-  //   )
-  //     .toISOString()
-  //     .substr(14, 5);
-  //   intervalDisplayAdd = 1;
-  //   document.getElementById("intervals-p").textContent =
-  //     intervalDisplayAdd + " /" + intervalDisplaySplit[1];
-  //   firstPlay = true;
-  //   play = false;
-  //   isEnd = false;
-  //   playIcon.style.display = "block";
-  //   pauseIcon.style.display = "none";
-  // });
+  resetButton.addEventListener("click", () => {
+    clear(pass_timer);
+    clear(remain_timer);
+    clear(logic_timer);
+    clear(curr_timer);
+    pass_timer = null;
+    remain_timer = null;
+    logic_timer = null;
+    curr_timer = null;
+    initTimer(data);
+    i = 0;
+    j = 0;
+    newTaskTime = 0;
+    newCurrTime = 0;
+    useTimeRemainTotal = timeRemainTotal; // reset to originail total time
+    document.getElementById("time-remain-p").textContent = new Date(
+      useTimeRemainTotal * 1000
+    )
+      .toISOString()
+      .substr(14, 5);
+    passSecond = 0;
+    document.getElementById("time-pass-p").textContent = new Date(
+      passSecond * 1000
+    )
+      .toISOString()
+      .substr(14, 5);
+    intervalDisplayAdd = 1;
+    document.getElementById("intervals-p").textContent =
+      intervalDisplayAdd + " /" + intervalDisplaySplit[1];
+    firstPlay = true;
+    play = false;
+    isEnd = false;
+    playIcon.style.display = "block";
+    pauseIcon.style.display = "none";
+  });
 });
 
 function clear(timer) {

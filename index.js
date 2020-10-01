@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const bodyParser = require("body-parser");
+
 const PORT = process.env.PORT || 4444;
 app.listen(PORT, () => {
   console.log(`Our app is running on port ${PORT}`);
@@ -18,16 +19,16 @@ let logicArr = [];
 
 app.get("/result", (req, res) => {
   //can base on user's session id to give the logicArr to the client?
-  let data = require("./public/data");
-  console.log('hi?')
-  console.log(data);
-  // console.log(data.formData);
-  // res.send(data.formData);
-  res.send(data);
+  //new code
+  // let str = "abc";
+  // let data = require("./public/data");
+  // // let jsonData = JSON.stringify(data);
+  // console.log(data);
+  // res.send(data);
 
-
+  //old code
   // res.send(logicArr);
-  logicArr = [];
+  // logicArr = [];
 });
 
 app.post("/timer", urlencodedParser, (req, res) => {

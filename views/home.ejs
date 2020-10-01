@@ -14,7 +14,7 @@
     <h1 id="topic-sentence">HIIT Timer</h1>
     <h2 style="text-align: center; margin-top: 2vh;">Made by: Martin Choi</h2>
     <div class="wrapper">
-        <form method="POST" action="/timer" class="needs-validation" novalidate>
+        <form id="myForm" method="POST" action="/timer" class="needs-validation" novalidate>
             <div class="form-group row">
                 <label for="sets-i" class="col-sm-2 col-form-label">No.of sets</label>
                 <div class="col-sm-10 input-div">
@@ -80,7 +80,7 @@
                     <input type="number" name="lowint-t" id="lowint-t" size="10">
                 </div>
             </div>
-            <button type="submit">Submit</button>
+            <button type="submit" id="submit">Submit</button>
         </form>
     </div>
 
