@@ -1,22 +1,6 @@
 var formData;
-//this ok
-// var logicArr = [
-//   { name: "Warm up", timeFormat: "00:05", time: 5 },
-//   { name: "High interval", timeFormat: "00:05", time: 5 },
-//   { name: "Low Interval", timeFormat: "00:05", time: 5 },
-//   { name: "High interval", timeFormat: "00:05", time: 5 },
-//   { name: "Low Interval", timeFormat: "00:05", time: 5 },
-//   { name: "Cool Down", timeFormat: "00:05", time: 5 },
-// ];
 
-let logicArr = [
-  { name: "Warm up", timeFormat: "00:05", time: "5" },
-  { name: "High interval", timeFormat: "00:05", time: "5" },
-  { name: "Low Interval", timeFormat: "00:04", time: "4" },
-  { name: "High interval", timeFormat: "00:05", time: "5" },
-  { name: "Low Interval", timeFormat: "00:04", time: "4" },
-  { name: "Cool Down", timeFormat: "00:05", time: "5" },
-];
+let logicArr = [];
 let result = JSON.parse(sessionStorage.getItem("data"));
 // var logicArr = [];
 let testObj = "abc";

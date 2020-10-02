@@ -15,19 +15,6 @@ const urlencodedParser = bodyParser.urlencoded({ extended: false });
 app.use(express.static("public"));
 app.use(express.json({ limit: "1mb" }));
 
-app.get("/result", (req, res) => {
-  //can base on user's session id to give the logicArr to the client?
-  //new code
-  // let str = "abc";
-  // let data = require("./public/data");
-  // // let jsonData = JSON.stringify(data);
-  // console.log(data);
-  // res.send(data);
-  //old code
-  // res.send(logicArr);
-  // logicArr = [];
-});
-
 app.post("/timer", urlencodedParser, (req, res) => {
   let logicArr = [];
 
@@ -140,8 +127,4 @@ app.post("/timer", urlencodedParser, (req, res) => {
 
 app.get("/", (req, res) => {
   res.render("home");
-});
-
-app.get("/api", (req, res) => {
-  res.send("The server has received your GET request");
 });

@@ -65,8 +65,8 @@ function remainCountDownTimer() {
     )
       .toISOString()
       .substr(14, 5);
-    console.log("A. remain_timer runs");
-    console.log(`A. useTimeRemainTotal = ${useTimeRemainTotal}`);
+    // console.log("A. remain_timer runs");
+    // console.log(`A. useTimeRemainTotal = ${useTimeRemainTotal}`);
     if (useTimeRemainTotal === 0) {
       clearInterval(remain_timer);
     }
@@ -77,9 +77,9 @@ function addInterval() {
   if (intervalDisplayAdd < intervalDisplaySplit[1]) intervalDisplayAdd++;
   document.getElementById("intervals-p").textContent =
     intervalDisplayAdd + " /" + intervalDisplaySplit[1];
-  console.log(
-    "ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL"
-  );
+  // console.log(
+  //   "ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL ADD INTERVAL"
+  // );
   // console.log(intervalDisplayAdd);
 }
 
@@ -91,9 +91,9 @@ function passAddTimer() {
     )
       .toISOString()
       .substr(14, 5);
-    console.log("B. pass_timer runs");
+    // console.log("B. pass_timer runs");
 
-    console.log(`B. passSecond = ${passSecond}`);
+    // console.log(`B. passSecond = ${passSecond}`);
     if (passSecond === totalTimeForPass) {
       clearInterval(pass_timer);
     }
@@ -103,29 +103,15 @@ function passAddTimer() {
 //Use the response data from server
 
 //Execute
-async function getData(callback) {
+function getData(callback) {
   //Get response from GET route on server
-  ////old code
 
-  // const response = await fetch("/result");
-
-  // //Now think of how to get the data same as the data from post route.
-  // //new code
-  // const data = await response.json();
-
-  // //old code
-  // // const data = await response.json();
-  // // // console.log(data);
-  // callback(data);
-  let storedData = JSON.parse(sessionStorage.getItem('data'));
-  let copy = storedData;
-  // console.log(storedData);
-  // console.log(result);
-  callback(copy);
+  let storedData = JSON.parse(sessionStorage.getItem("data"));
+  callback(storedData);
 }
 
 getData(function (data) {
-  console.log(data);
+  // console.log(data);
 
   /**Original code, dont delete**/
   let i = 0;
@@ -153,9 +139,9 @@ getData(function (data) {
     logic_timer = setInterval(() => {
       //if the time reaches the total time of each obj, then execute other obj
       currTime++;
-      console.log(`C. logic_timer runs`);
-      console.log(`C1. currTime = ${currTime}`);
-      console.log(`C2. newTaskTime = ${newTaskTime}`);
+      // console.log(`C. logic_timer runs`);
+      // console.log(`C1. currTime = ${currTime}`);
+      // console.log(`C2. newTaskTime = ${newTaskTime}`);
       if (currTime === newTaskTime) {
         clearInterval(logic_timer);
         addInterval();
@@ -182,9 +168,9 @@ getData(function (data) {
       .substr(14, 5);
     curr_timer = setInterval(() => {
       newCurrTime--;
-      console.log(`D. currCountDownTimer runs`);
-      console.log(`D. newCurrTime = ${newCurrTime}`);
-      console.log(`_____________________________`);
+      // console.log(`D. currCountDownTimer runs`);
+      // console.log(`D. newCurrTime = ${newCurrTime}`);
+      // console.log(`_____________________________`);
 
       //Do not display 0 in text content of curr-time
       if (newCurrTime !== 0) {
@@ -235,32 +221,32 @@ getData(function (data) {
         } else {
           playIcon.style.display = "none";
           pauseIcon.style.display = "block";
-          console.log("___________");
-          console.log("RESUME ALL TIMER^_^");
+          // console.log("___________");
+          // console.log("RESUME ALL TIMER^_^");
           passAddTimer(); //pass_timer will start at 0 when resume (solved) ->need to put the pass second in global scope
           remainCountDownTimer();
           logicTimer(data, newTaskTime);
           currCountDownTimer(data, newCurrTime);
-          console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
-          console.log(`B. passSecond = ${passSecond}`);
-          console.log(`C. newTaskTime = ${newTaskTime}`);
-          console.log(`D. newCurrTime = ${newCurrTime}`);
-          console.log(`E. currTime = ${currTime}`);
+          // console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
+          // console.log(`B. passSecond = ${passSecond}`);
+          // console.log(`C. newTaskTime = ${newTaskTime}`);
+          // console.log(`D. newCurrTime = ${newCurrTime}`);
+          // console.log(`E. currTime = ${currTime}`);
         }
       } else {
         playIcon.style.display = "block";
         pauseIcon.style.display = "none";
-        console.log("__________");
-        console.log("PAUSE ALL TIMER!!!!");
+        // console.log("__________");
+        // console.log("PAUSE ALL TIMER!!!!");
         clear(pass_timer);
         clear(remain_timer);
         clear(logic_timer); //still can not clear? can not clear the logic timer inside the for loop
         clear(curr_timer);
-        console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
-        console.log(`B. passSecond = ${passSecond}`);
-        console.log(`C. newTaskTime = ${newTaskTime}`);
-        console.log(`D. newCurrTime = ${newCurrTime}`);
-        console.log(`E. currTime = ${currTime}`);
+        // console.log(`A. timeRemainTotal = ${timeRemainTotal}`);
+        // console.log(`B. passSecond = ${passSecond}`);
+        // console.log(`C. newTaskTime = ${newTaskTime}`);
+        // console.log(`D. newCurrTime = ${newCurrTime}`);
+        // console.log(`E. currTime = ${currTime}`);
         firstPlay = false;
       }
     }
@@ -304,6 +290,6 @@ getData(function (data) {
 });
 
 function clear(timer) {
-  console.log(`${timer} is cleared`);
+  // console.log(`${timer} is cleared`);
   clearInterval(timer);
 }
