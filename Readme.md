@@ -1,5 +1,5 @@
 HIIT timer 
-https://peaceful-coast-01850.herokuapp.com/timer
+https://peaceful-coast-01850.herokuapp.com
 
 SETUP/USAGE/HOW TO
 
